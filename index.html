@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arte Criolla | Joaquin Vitale</title>
+  <style>
+    :root {
+      --bg: #f7f1e8;
+      --bg-2: #fcfaf6;
+      --card: rgba(255,255,255,0.82);
+      --text: #33271f;
+      --muted: #766457;
+      --line: rgba(118, 100, 87, 0.16);
+      --accent: #b88d59;
+      --accent-dark: #8d673c;
+      --accent-soft: rgba(184, 141, 89, 0.12);
+      --success: #3d7d55;
+      --danger: #9f5b48;
+      --shadow: 0 22px 50px rgba(58, 40, 22, 0.12);
+      --shadow-soft: 0 12px 28px rgba(58, 40, 22, 0.08);
+      --radius: 24px;
+      --header-h: 82px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(184,141,89,0.12), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(141,103,60,0.10), transparent 24%),
+        linear-gradient(180deg, #fcfaf6 0%, var(--bg) 100%);
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, h4, .brand, .hero-title, .price, .detail-price {
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: 0.02em;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, select, input { font: inherit; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(1240px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--header-h);
+      backdrop-filter: blur(14px);
+      background: rgba(252, 250, 246, 0.76);
+      border-bottom: 1px solid rgba(118,100,87,0.1);
+    }
+
+    .header-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      font-weight: 700;
+    }
+
+    .brand-sub {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 3px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .nav a:hover { color: var(--accent-dark); }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, opacity 0.22s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+      box-shadow: 0 14px 26px rgba(141, 103, 60, 0.22);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.78);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, #3d7d55, #2f6845);
+      color: white;
+    }
+
+    .btn-clear {
+      background: rgba(118,100,87,0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .hero { padding: 54px 0 32px; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .hero-showcase,
+    .detail-gallery,
+    .detail-panel,
+    .contact-card,
+    .card,
+    .drawer {
+      box-shadow: var(--shadow-soft);
+    }
+
+    .hero-card,
+    .hero-showcase {
+      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,249,242,0.9));
+      border: 1px solid rgba(184,141,89,0.18);
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-card {
+      padding: 42px;
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-card::before,
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(12px);
+      z-index: 0;
+    }
+
+    .hero-card::before {
+      width: 220px; height: 220px; right: -32px; top: -22px;
+      background: rgba(184,141,89,0.14);
+    }
+
+    .hero-card::after {
+      width: 150px; height: 150px; left: -24px; bottom: -24px;
+      background: rgba(141,103,60,0.10);
+    }
+
+    .hero-card > * { position: relative; z-index: 1; }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      margin: 0 0 18px;
+      font-size: clamp(2.3rem, 5vw, 4.2rem);
+      line-height: 0.98;
+      max-width: 12ch;
+    }
+
+    .hero-text {
+      margin: 0 0 26px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 58ch;
+      font-size: 1.04rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .hero-showcase {
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,252,246,0.94), rgba(247,239,229,0.96));
+      display: grid;
+      gap: 14px;
+    }
+
+   .showcase-main,
+.showcase-mini,
+.art-cover,
+.cart-thumb {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.detail-main-image,
+.thumb,
+.mock-image {
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f4efe8;
+}
+
+    .showcase-main {
+      aspect-ratio: 4 / 3;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(118,100,87,0.12);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .showcase-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .showcase-mini {
+      aspect-ratio: 1 / 1;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(118,100,87,0.1);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin: 28px 0 18px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.35rem);
+    }
+
+    .section-copy {
+      margin: 8px 0 0;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 70ch;
+    }
+
+    .catalog { padding: 8px 0 72px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-7px);
+      box-shadow: var(--shadow);
+      border-color: rgba(184,141,89,0.28);
+    }
+
+    .art-cover {
+      aspect-ratio: 4 / 3;
+      position: relative;
+      background-color: #f0ece6;
+    }
+
+    .art-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.18));
+    }
+
+    .art-tag {
+      position: absolute;
+      left: 16px;
+      bottom: 16px;
+      z-index: 1;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      font-size: 0.84rem;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+
+    .card-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .card-top {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: start;
+    }
+
+    .card-title { margin: 0; font-size: 1.34rem; }
+
+    .badge {
+      white-space: nowrap;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      min-height: 48px;
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .price small,
+    .detail-price small {
+      display: block;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+      letter-spacing: normal;
+    }
+
+    .price {
+      font-size: 1.55rem;
+      font-weight: 700;
+    }
+
+    .ghost-link {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.78);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 12px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.22s ease, background 0.22s ease;
+    }
+
+    .ghost-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,1);
+    }
+
+    .detail-page { padding: 26px 0 70px; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+
+    .back-link:hover { color: var(--accent-dark); }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .detail-gallery,
+    .detail-panel {
+      background: rgba(255,255,255,0.8);
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .detail-main-image {
+  transition: opacity 0.25s ease;	
+  aspect-ratio: 4 / 3;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(118,100,87,0.12);
+  box-shadow: var(--shadow-soft);
+  background-color: #f7f2eb;
+  cursor: zoom-in;
+}
+.detail-main-image:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
+}
+
+.mock-image {
+  aspect-ratio: 4 / 3;
+  background-color: #f7f2eb;
+}
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .thumb {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+      opacity: 0.88;
+      background-color: #f4f1ec;
+    }
+
+    .thumb:hover { transform: translateY(-2px); opacity: 1; }
+    .thumb.active { border-color: var(--accent); opacity: 1; }
+
+    .thumb-label {
+      position: absolute;
+      left: 8px;
+      bottom: 8px;
+      background: rgba(255,255,255,0.84);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .detail-panel {
+      padding: 28px;
+      position: sticky;
+      top: calc(var(--header-h) + 18px);
+    }
+
+    .detail-title {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 3.4vw, 3rem);
+      line-height: 1.05;
+    }
+
+    .detail-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .meta-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .detail-description {
+      color: var(--muted);
+      line-height: 1.8;
+      margin: 0 0 20px;
+    }
+
+    .detail-price {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .option-block {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.72);
+      margin-bottom: 14px;
+    }
+
+    .option-title {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    select,
+    input[type="text"] {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(118,100,87,0.18);
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    select:focus,
+    input[type="text"]:focus {
+      border-color: rgba(184,141,89,0.74);
+      box-shadow: 0 0 0 4px rgba(184,141,89,0.12);
+    }
+
+    .hidden { display: none; }
+
+    .size-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .detail-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .detail-extra {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(118,100,87,0.14);
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 0.95rem;
+    }
+
+    .mockups-section { margin-top: 26px; }
+
+    .mockups-title {
+      margin: 0 0 12px;
+      font-size: 1.45rem;
+    }
+
+    .mockups-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .mock-card {
+      background: rgba(255,255,255,0.74);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .mock-image {
+      aspect-ratio: 4 / 3;
+      background-color: #ede8e1;
+    }
+
+    .mock-body { padding: 14px; }
+    .mock-body h4 { margin: 0 0 6px; font-size: 1rem; }
+    .mock-body p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .contact { padding: 6px 0 74px; }
+
+    .contact-box {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .contact-card {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .contact-card h3 { margin: 0 0 10px; font-size: 1.18rem; }
+    .contact-card p { margin: 0; color: var(--muted); line-height: 1.75; }
+
+    footer {
+      border-top: 1px solid rgba(118,100,87,0.12);
+      background: rgba(250,244,236,0.72);
+      padding: 22px 0 34px;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+
+    .cart-fab {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 80;
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      border: 1px solid rgba(118,100,87,0.14);
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 16px 34px rgba(69,49,27,0.16);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .cart-fab:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 20px 36px rgba(69,49,27,0.22);
+    }
+
+    .cart-fab svg { width: 26px; height: 26px; color: var(--text); }
+
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 6px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30,22,15,0.38);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+      z-index: 90;
+    }
+
+    .overlay.open { opacity: 1; pointer-events: auto; }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(440px, 100%);
+      height: 100dvh;
+      background: linear-gradient(180deg, #fffdfa, #f8f0e5);
+      transform: translateX(100%);
+      transition: transform 0.32s ease;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(118,100,87,0.12);
+      box-shadow: -20px 0 40px rgba(39,26,12,0.18);
+    }
+
+    .drawer.open { transform: translateX(0); }
+
+    .drawer-header {
+      padding: 22px 22px 16px;
+      border-bottom: 1px solid rgba(118,100,87,0.12);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .drawer-title { margin: 0; font-size: 1.5rem; }
+
+    .close-btn {
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 12px;
+      background: rgba(118,100,87,0.08);
+      cursor: pointer;
+      color: var(--text);
+      font-size: 1.05rem;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .close-btn:hover {
+      transform: rotate(90deg);
+      background: rgba(118,100,87,0.14);
+    }
+
+    .drawer-body {
+      padding: 18px 22px;
+      overflow: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .cart-empty {
+      margin: auto 0;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+      padding: 40px 16px;
+      border: 1px dashed rgba(118,100,87,0.22);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.5);
+    }
+
+    .cart-item {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(118,100,87,0.12);
+      border-radius: 18px;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 78px 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .cart-thumb {
+      width: 78px;
+      height: 78px;
+      border-radius: 16px;
+      overflow: hidden;
+      background-color: #f1ece6;
+    }
+
+    .cart-item h4 { margin: 0 0 5px; font-size: 1rem; }
+
+    .cart-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .remove-btn {
+      border: 0;
+      background: transparent;
+      color: var(--danger);
+      font-weight: 700;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 10px;
+    }
+
+    .remove-btn:hover { background: rgba(159,91,72,0.08); }
+
+    .drawer-footer {
+      padding: 18px 22px 24px;
+      border-top: 1px solid rgba(118,100,87,0.12);
+      background: rgba(255,252,247,0.88);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .total-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(184,141,89,0.08);
+      border: 1px solid rgba(184,141,89,0.14);
+      padding: 16px 18px;
+      border-radius: 18px;
+    }
+
+    .total-box strong { font-size: 1.35rem; }
+
+    .footer-actions { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(24px);
+      background: rgba(51,39,31,0.96);
+      color: white;
+      padding: 13px 18px;
+      border-radius: 999px;
+      box-shadow: 0 18px 30px rgba(39,26,12,0.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease, transform 0.24s ease;
+      z-index: 120;
+      font-size: 0.95rem;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .detail-grid,
+      .contact-box,
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-grid,
+      .detail-grid { grid-template-columns: 1fr; }
+      .detail-panel { position: static; }
+    }
+
+    @media (max-width: 760px) {
+      :root { --header-h: 74px; }
+      .nav { display: none; }
+      .hero { padding-top: 34px; }
+      .hero-card { padding: 28px 22px; min-height: unset; }
+      .hero-title { max-width: 100%; }
+      .grid,
+      .contact-box,
+      .mockups-grid { grid-template-columns: 1fr; }
+      .section-head { flex-direction: column; align-items: start; }
+      .card-actions,
+      .detail-actions { grid-template-columns: 1fr; }
+      .thumbs { grid-template-columns: repeat(2, 1fr); }
+      .cart-item { grid-template-columns: 70px 1fr; }
+      .remove-btn { grid-column: 2; justify-self: start; padding-left: 0; }
+      .drawer { width: 100%; }
+      .cart-fab { top: 12px; right: 14px; width: 54px; height: 54px; }
+    }
+  </style>
+</head>
+<body>
+  <button class="cart-fab" id="cartFab" aria-label="Abrir carrito">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="9" cy="20" r="1"></circle>
+      <circle cx="18" cy="20" r="1"></circle>
+      <path d="M2.5 3h2l2.68 10.39a1 1 0 0 0 .97.75h9.72a1 1 0 0 0 .97-.76L21 6H6"></path>
+    </svg>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="drawer" id="drawer" aria-label="Carrito de compras">
+    <div class="drawer-header">
+      <div>
+        <h2 class="drawer-title">Tu carrito</h2>
+        <small style="color: var(--muted);">Revisá tu pedido antes de enviarlo</small>
+      </div>
+      <button class="close-btn" id="closeDrawer" aria-label="Cerrar carrito">✕</button>
+    </div>
+
+    <div class="drawer-body" id="cartItemsContainer"></div>
+
+    <div class="drawer-footer">
+      <div class="total-box">
+        <span>Total del pedido</span>
+        <strong id="cartTotal">$ 0</strong>
+      </div>
+      <div class="footer-actions">
+        <button class="btn btn-whatsapp" id="whatsappBtn">Consultar por WhatsApp</button>
+        <button class="btn btn-clear" id="clearCartBtn">Vaciar carrito</button>
+      </div>
+    </div>
+  </aside>
+
+  <header class="header">
+    <div class="container header-inner">
+      <div>
+        <a href="#inicio" class="brand" id="brandHomeLink">Arte Criolla</a>
+        <span class="brand-sub">Joaquin Vitale</span>
+      </div>
+      <nav class="nav">
+        <a href="#catalogo" id="navCatalog">Catálogo</a>
+        <a href="#contacto" id="navContact">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page active" id="catalogPage">
+      <section class="hero" id="inicio">
+        <div class="container hero-grid">
+          <div class="hero-card">
+            <span class="eyebrow">Arte original • Hecho a mano</span>
+            <h1 class="hero-title">El sentimiento criollo, hecho arte.</h1>
+            <p class="hero-text">
+              Obra original que celebra nuestra cultura y tradición rural. Retratos detallados a mano para transformar tus espacios con la calidez de lo nuestro.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#catalogo">Ver catálogo</a>
+              <a class="btn btn-secondary" href="#contacto">Consultar por encargos</a>
+            </div>
+          </div>
+
+          <div class="hero-showcase" id="heroShowcase"></div>
+        </div>
+      </section>
+
+      <section class="catalog" id="catalogo">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Colección destacada</h2>
+              <p class="section-copy">
+                Hacé click en cada obra para verla ampliada y también aplicada en ambientes estilo living y estudio.
+              </p>
+            </div>
+          </div>
+          <div class="grid" id="galleryGrid"></div>
+        </div>
+      </section>
+
+      <section class="contact" id="contacto">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <h2 class="section-title">Contacto</h2>
+            </div>
+          </div>
+
+<div class="contact-box">
+  <article class="contact-card">
+    <h3>Joaquín Arte Criolla</h3>
+    <p>Obra original que celebra nuestra cultura y tradición rural a través de retratos detallados hechos a mano.</p>
+  </article>
+  <article class="contact-card">
+    <h3>Consultas y pedidos</h3>
+    <p>Email: joavitale1@hotmail.com<br>Instagram: @joaquin.artecriolla</p>
+  </article>
+  <article class="contact-card">
+    <h3>Medidas</h3>
+    <p>Disponible en tamaño A4 y también en formato personalizado a pedido.</p>
+  </article>
+</div>
+        </div>
+      </section>
+    </section>
+
+    <section class="page detail-page" id="detailPage">
+      <div class="container">
+        <div class="back-link" id="backToCatalog">← Volver al catálogo</div>
+
+        <div class="detail-grid">
+          <div>
+            <div class="detail-gallery">
+              <div class="detail-main-image" id="detailMainImage"></div>
+              <div class="thumbs" id="detailThumbs"></div>
+            </div>
+
+            <div class="mockups-section">
+              <h3 class="mockups-title">Cómo se ve en interiores</h3>
+              <div class="mockups-grid" id="mockupsGrid"></div>
+            </div>
+          </div>
+
+          <aside class="detail-panel">
+            <h1 class="detail-title" id="detailTitle"></h1>
+            <div class="detail-meta" id="detailMeta"></div>
+            <p class="detail-description" id="detailDescription"></p>
+
+            <div class="detail-price" id="detailPrice"></div>
+
+            <div class="option-block">
+              <label class="option-title" for="detailSizeSelect">Elegí una medida</label>
+              <select id="detailSizeSelect"></select>
+              <div class="size-note" id="detailSizeNote"></div>
+            </div>
+
+            <div class="option-block hidden" id="detailCustomGroup">
+              <label class="option-title" for="detailCustomSize">Medida personalizada</label>
+              <input type="text" id="detailCustomSize" placeholder="Ej: 70x90 cm" />
+            </div>
+
+            <div class="detail-actions">
+              <button class="btn btn-primary" id="detailAddToCart">Agregar al carrito</button>
+              <button class="btn btn-secondary" id="detailBuyNow">Consultar por WhatsApp</button>
+            </div>
+
+            <div class="detail-extra" id="detailExtra"></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+     <span>© 2026 Arte Criolla</span>
+     <span>Obra original inspirada en la cultura y tradición rural</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">Producto agregado al carrito</div>
+
+  <script>
+    const WHATSAPP_NUMBER = "5492262356005";
+
+  const SIZE_PRICES = {
+  "A4": 0,
+  "Personalizado": 0
+  };
+
+const PAINTINGS = [
+  {
+    id: 1,
+    name: "La soberana",
+    description: "Dibujo a lápiz",
+    category: "Retrato animal",
+    summary: "Porte de estancia y alma de campo. Un retrato que captura la mansa quietud de la pampa, ahí donde el horizonte se vuelve cuero y vida.",
+    details: "Obra realizada a lápiz con gran detalle en el pelaje, la mirada y las texturas. Perfecta para acompañar interiores neutros, madera clara y ambientes con inspiración rural elegante.",
+    image: "images/vaca.jpeg",
+    rooms: {
+      living: "images/vaca-living.jpg",
+      studio: "images/vaca-estudio.jpg"
+    }
+  },
+  {
+    id: 2,
+    name: "Haciendo retranca",
+    description: "Dibujo a lápiz",
+    category: "Campo y tradición",
+    summary: "Fuerza de abajo y mirada altiva. Un homenaje al pingo que sabe hacer planta y sostener el tirón con dignidad. Es el rastro del trabajo rural volcado al papel, capturando el momento justo donde el animal muestra de qué madera está hecho.",
+    details: "El perfil del caballo transmite calma y presencia. Funciona muy bien en estudios, livings sobrios y espacios donde se busca una obra con identidad tradicional.",
+    image: "images/caballo2.png",
+    rooms: {
+      living: "images/caballo2-living.png",
+      studio: "images/caballo2-estudio.png"
+    }
+  },
+  {
+    id: 3,
+    name: "Mirando la estancia",
+    description: "Dibujo a lápiz",
+    category: "Retrato animal",
+    summary: "Atento al más mínimo movimiento del horizonte, este pingo refleja la lealtad y el rastro de la historia. Una estampa que resume la vigilancia eterna de quien cuida lo que es suyo.",
+    details: "La mirada, el volumen y la composición central generan una obra fuerte y elegante. Muy buena opción para livings, halls o paredes destacadas.",
+    image: "images/caballo1.png",
+    rooms: {
+      living: "images/caballo1-living.png",
+      studio: "images/caballo1-estudio.png"
+    }
+  },
+  {
+    id: 4,
+    name: "Compañeros de querencia",
+    description: "Dibujo a lápiz",
+    category: "Campo y naturaleza",
+    summary: "Un resuello en la jornada para compartir la aguada. En ese reflejo se encuentra la hermandad del campo: dos relinchos que se entienden sin palabras, unidas por el mismo suelo y la misma sed.",
+    details: "Dos caballos bebiendo agua en una composición suave y equilibrada. Ideal para ambientes cálidos y relajados.",
+    image: "images/caballos-agua.PNG",
+    rooms: {
+      living: "images/caballos-agua-living.PNG",
+      studio: "images/caballos-agua-estudio.PNG"
+    }
+  },
+  {
+    id: 5,
+    name: "Centinela de alambrado",
+    description: "Dibujo a lápiz",
+    category: "Naturaleza",
+    summary: "Apenas un puñado de plumas y coraje encaramado en el horcón. Este pequeño guardián observa el paso del tiempo, marcando con su presencia.",
+    details: "Un ave posada sobre madera rústica, perfecta para espacios tranquilos o decoraciones simples con carácter.",
+    image: "images/pajarito-poste.PNG",
+    rooms: {
+      living: "images/pajarito-poste-living.PNG",
+      studio: "images/pajarito-poste-estudio.PNG"
+    }
+  },
+  {
+    id: 6,
+    name: "Encontronazo",
+    description: "Dibujo a lápiz",
+    category: "Campo y tradición",
+    summary: "El pulso del corral detenido en un trazo. La mirada fija y el cuero curtido, capturando la esencia pura del campo argentino.",
+    details: "Dos toros enfrentados en una composición de gran impacto visual, ideal para destacar en espacios con identidad criolla y carácter.",
+    image: "images/toros-frente.PNG",
+    rooms: {
+  	living: "images/toros-frente-living.jpg",
+  	studio: "images/toros-frente-estudio.jpg"
+}
+  }
+
+];
+    const cart = [];
+    let currentPaintingId = PAINTINGS[0].id;
+
+    const catalogPage = document.getElementById("catalogPage");
+    const detailPage = document.getElementById("detailPage");
+    const galleryGrid = document.getElementById("galleryGrid");
+    const heroShowcase = document.getElementById("heroShowcase");
+
+    const detailMainImage = document.getElementById("detailMainImage");
+    const detailThumbs = document.getElementById("detailThumbs");
+    const mockupsGrid = document.getElementById("mockupsGrid");
+    const detailTitle = document.getElementById("detailTitle");
+    const detailMeta = document.getElementById("detailMeta");
+    const detailDescription = document.getElementById("detailDescription");
+    const detailPrice = document.getElementById("detailPrice");
+    const detailSizeSelect = document.getElementById("detailSizeSelect");
+    const detailSizeNote = document.getElementById("detailSizeNote");
+    const detailCustomGroup = document.getElementById("detailCustomGroup");
+    const detailCustomSize = document.getElementById("detailCustomSize");
+    const detailAddToCart = document.getElementById("detailAddToCart");
+    const detailBuyNow = document.getElementById("detailBuyNow");
+    const detailExtra = document.getElementById("detailExtra");
+    const backToCatalog = document.getElementById("backToCatalog");
+
+    const cartFab = document.getElementById("cartFab");
+    const drawer = document.getElementById("drawer");
+    const overlay = document.getElementById("overlay");
+    const closeDrawer = document.getElementById("closeDrawer");
+    const cartCount = document.getElementById("cartCount");
+    const cartItemsContainer = document.getElementById("cartItemsContainer");
+    const cartTotal = document.getElementById("cartTotal");
+    const clearCartBtn = document.getElementById("clearCartBtn");
+    const whatsappBtn = document.getElementById("whatsappBtn");
+    const toast = document.getElementById("toast");
+
+    function formatCurrency(value) {
+  return "Consultar";
+}
+    function getPriceBySize(basePrice, sizeLabel) {
+      return basePrice + (SIZE_PRICES[sizeLabel] || 0);
+    }
+
+    function getPaintingById(id) {
+      return PAINTINGS.find((item) => item.id === id);
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timeoutId);
+      showToast.timeoutId = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2200);
+    }
+
+    function getSizeNote(size) {
+  if (size === "Personalizado") {
+    return "Podés escribir la medida deseada y luego la confirmás por mensaje.";
+  }
+  return "Consultá disponibilidad y valor según obra y tamaño.";
+}
+
+   function getCurrentDetailMeasure() {
+  const selectedSize = detailSizeSelect.value;
+  if (selectedSize === "Personalizado") {
+    const customValue = detailCustomSize.value.trim();
+    return customValue || "Personalizado (a confirmar)";
+  }
+  return selectedSize;
+}
+
+    function getCurrentDetailPrice() {
+      const painting = getPaintingById(currentPaintingId);
+      return getPriceBySize(painting.basePrice, detailSizeSelect.value);
+    }
+
+    function setMainImage(url) {
+      detailMainImage.style.opacity = "0";
+
+setTimeout(() => {
+  detailMainImage.style.backgroundImage = `url(${url})`;
+  detailMainImage.style.opacity = "1";
+}, 150);
+    }
+    function renderHeroShowcase() {
+      const featured = PAINTINGS[0];
+      heroShowcase.innerHTML = `
+        <div class="showcase-main" style="background-image:url('${featured.image}')"></div>
+        <div class="showcase-row">
+          <div class="showcase-mini" style="background-image:url('${PAINTINGS[1].image}')"></div>
+          <div class="showcase-mini" style="background-image:url('${PAINTINGS[2].image}')"></div>
+          <div class="showcase-mini" style="background-image:url('${PAINTINGS[3].image}')"></div>
+        </div>
+      `;
+    }
+
+    function renderGallery() {
+      galleryGrid.innerHTML = PAINTINGS.map((painting) => `
+        <article class="card">
+          <div class="art-cover" style="background-image:url('${painting.image}')">
+            <span class="art-tag">${painting.category}</span>
+          </div>
+          <div class="card-body">
+            <div class="card-top">
+              <div>
+                <h3 class="card-title">${painting.name}</h3>
+                <p class="desc">${painting.description}</p>
+              </div>
+              <span class="badge">Original</span>
+            </div>
+            <p class="desc">${painting.summary}</p>
+            <div class="card-actions">
+              <button class="ghost-link" data-open-detail="${painting.id}">Ver cuadro</button>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      document.querySelectorAll("[data-open-detail]").forEach((button) => {
+        button.addEventListener("click", () => openDetail(Number(button.dataset.openDetail)));
+      });
+    }
+
+    function renderDetail(paintingId) {
+      const painting = getPaintingById(paintingId);
+      if (!painting) return;
+
+      currentPaintingId = paintingId;
+
+      detailTitle.textContent = painting.name;
+      detailMeta.innerHTML = `
+        <span class="meta-pill">${painting.description}</span>
+        <span class="meta-pill">${painting.category}</span>
+        <span class="meta-pill">Hecho a mano</span>
+      `;
+      detailDescription.textContent = painting.summary;
+      detailExtra.innerHTML = `
+        <strong style="color:var(--text)">Sobre esta obra</strong><br>
+        ${painting.details}
+      `;
+
+     detailSizeSelect.innerHTML = Object.keys(SIZE_PRICES).map((size) => {
+  return `<option value="${size}">${size}</option>`;
+}).join("");
+
+      detailSizeSelect.value = "A4";
+      detailCustomSize.value = "";
+      detailCustomGroup.classList.add("hidden");
+      detailSizeNote.textContent = getSizeNote(detailSizeSelect.value);
+      detailPrice.innerHTML = `<small>Precio</small>${formatCurrency(getPriceBySize(0, detailSizeSelect.value))}`;
+
+      setMainImage(painting.image);
+
+      const thumbs = [
+  { label: "Obra", image: painting.image },
+  { label: "Living", image: painting.rooms?.living || painting.image },
+  { label: "Oficina", image: painting.rooms?.studio || painting.image }
+];
+
+      detailThumbs.innerHTML = thumbs.map((thumb, index) => `
+        <button class="thumb ${index === 0 ? "active" : ""}" data-thumb-image="${thumb.image}" style="background-image:url('${thumb.image}')">
+          <span class="thumb-label">${thumb.label}</span>
+        </button>
+      `).join("");
+
+      detailThumbs.querySelectorAll(".thumb").forEach((thumb) => {
+        thumb.addEventListener("click", () => {
+          detailThumbs.querySelectorAll(".thumb").forEach((t) => t.classList.remove("active"));
+          thumb.classList.add("active");
+          setMainImage(thumb.dataset.thumbImage);
+        });
+      });
+
+      renderMockups(painting, detailSizeSelect.value);
+    }
+
+    function renderMockups(painting, selectedSize) {
+  const living = painting.rooms?.living || painting.image;
+  const studio = painting.rooms?.studio || painting.image;
+
+  mockupsGrid.innerHTML = `
+    <article class="mock-card">
+      <div class="mock-image" style="background-image:url('${living}')"></div>
+      <div class="mock-body">
+        <h4>Living</h4>
+        <p>Vista del cuadro aplicado en un living cálido y elegante.</p>
+      </div>
+    </article>
+    <article class="mock-card">
+      <div class="mock-image" style="background-image:url('${studio}')"></div>
+      <div class="mock-body">
+        <h4>Oficina</h4>
+        <p>Vista del cuadro integrado en un espacio de trabajo con estilo y carácter.</p>
+      </div>
+    </article>
+  `;
+}
+
+    function updateDetailPriceAndMock() {
+      const painting = getPaintingById(currentPaintingId);
+      const size = detailSizeSelect.value;
+      detailCustomGroup.classList.toggle("hidden", size !== "Personalizado");
+      detailSizeNote.textContent = getSizeNote(size);
+      detailPrice.innerHTML = `<small>Precio final según medida</small>${formatCurrency(getPriceBySize(painting.basePrice, size))}`;
+      renderDetail(currentPaintingId);
+      detailSizeSelect.value = size;
+      detailSizeNote.textContent = getSizeNote(size);
+      detailPrice.innerHTML = `<small>Precio final según medida</small>${formatCurrency(getPriceBySize(painting.basePrice, size))}`;
+    }
+
+    function openDetail(paintingId) {
+      renderDetail(paintingId);
+      catalogPage.classList.remove("active");
+      detailPage.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showCatalog() {
+      detailPage.classList.remove("active");
+      catalogPage.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function addCurrentDetailToCart() {
+      const painting = getPaintingById(currentPaintingId);
+      const finalMeasure = getCurrentDetailMeasure();
+      const finalPrice = getCurrentDetailPrice();
+
+      cart.push({
+        cartId: Date.now() + Math.random(),
+        paintingId: painting.id,
+        name: painting.name,
+        measure: finalMeasure,
+        price: finalPrice,
+        image: painting.image
+      });
+
+      updateCartUI();
+      showToast(`${painting.name} agregado al carrito`);
+    }
+
+function buyCurrentDetailByWhatsApp() {
+  const painting = getPaintingById(currentPaintingId);
+  const selectedSize = getCurrentDetailMeasure();
+
+  const lines = [
+    "Hola! Me interesa esta obra:",
+    "",
+    `Obra: ${painting.name}`,
+    `Tamaño: ${selectedSize}`,
+    "",
+    "Quisiera consultar disponibilidad y valor. Gracias!"
+  ];
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+  window.open(url, "_blank");
+}
+    function updateCartUI() {
+      cartCount.textContent = cart.length;
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `
+          <div class="cart-empty">
+            <h3 style="margin-top:0; font-family: Georgia, serif; font-size:1.4rem;">Tu carrito está vacío</h3>
+            <p style="margin-bottom:0;">Sumá tus cuadros favoritos y luego enviá el pedido por WhatsApp.</p>
+          </div>
+        `;
+        cartTotal.textContent = formatCurrency(0);
+        whatsappBtn.disabled = true;
+        whatsappBtn.style.opacity = "0.6";
+        clearCartBtn.disabled = true;
+        clearCartBtn.style.opacity = "0.6";
+        return;
+      }
+
+      whatsappBtn.disabled = false;
+      whatsappBtn.style.opacity = "1";
+      clearCartBtn.disabled = false;
+      clearCartBtn.style.opacity = "1";
+
+      cartItemsContainer.innerHTML = cart.map((item) => `
+        <div class="cart-item">
+          <div class="cart-thumb" style="background-image:url('${item.image}')"></div>
+          <div>
+            <h4>${item.name}</h4>
+            <div class="cart-meta">
+              Medida: ${item.measure}<br>
+              Precio: ${formatCurrency(item.price)}
+            </div>
+          </div>
+          <button class="remove-btn" onclick="removeFromCart(${item.cartId})">Eliminar</button>
+        </div>
+      `).join("");
+
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      cartTotal.textContent = formatCurrency(total);
+    }
+
+    function removeFromCart(cartId) {
+      const index = cart.findIndex((item) => item.cartId === cartId);
+      if (index !== -1) {
+        const removed = cart[index];
+        cart.splice(index, 1);
+        updateCartUI();
+        showToast(`${removed.name} eliminado del carrito`);
+      }
+    }
+
+    function clearCart() {
+      if (cart.length === 0) return;
+      cart.length = 0;
+      updateCartUI();
+      showToast("Carrito vaciado");
+    }
+
+    window.removeFromCart = removeFromCart;
+
+    function openDrawer() {
+      drawer.classList.add("open");
+      overlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeDrawerFn() {
+      drawer.classList.remove("open");
+      overlay.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    cartFab.addEventListener("click", openDrawer);
+    closeDrawer.addEventListener("click", closeDrawerFn);
+    overlay.addEventListener("click", closeDrawerFn);
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeDrawerFn();
+    });
+
+function generateWhatsAppMessage() {
+  const lines = [
+    "Hola! Me interesan las siguientes obras:",
+    ""
+  ];
+
+  cart.forEach((item, index) => {
+    lines.push(`${index + 1}. ${item.name}`);
+    lines.push(`   Tamaño: ${item.measure}`);
+    lines.push("");
+  });
+
+  lines.push("Quisiera consultar disponibilidad y valor. Gracias!");
+
+  return lines.join("\n");
+}
+    function sendWhatsAppOrder() {
+      if (cart.length === 0) {
+        showToast("Agregá al menos un cuadro antes de enviar el pedido");
+        return;
+      }
+
+      const message = generateWhatsAppMessage();
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank");
+    }
+
+    detailSizeSelect.addEventListener("change", updateDetailPriceAndMock);
+    detailAddToCart.addEventListener("click", addCurrentDetailToCart);
+    detailBuyNow.addEventListener("click", buyCurrentDetailByWhatsApp);
+    backToCatalog.addEventListener("click", showCatalog);
+    whatsappBtn.addEventListener("click", sendWhatsAppOrder);
+    clearCartBtn.addEventListener("click", clearCart);
+    document.getElementById("brandHomeLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      showCatalog();
+    });
+    document.getElementById("navCatalog").addEventListener("click", () => showCatalog());
+    document.getElementById("navContact").addEventListener("click", () => {
+      showCatalog();
+      setTimeout(() => {
+        document.getElementById("contacto").scrollIntoView({ behavior: "smooth" });
+      }, 80);
+    });
+
+
+renderHeroShowcase();
+renderGallery();
+renderDetail(currentPaintingId);
+updateCartUI();
+
+window.addEventListener("DOMContentLoaded", () => {
+  const zoomOverlay = document.getElementById("zoomOverlay");
+  const zoomViewer = document.getElementById("zoomViewer");
+  const zoomImageBox = document.getElementById("zoomImageBox");
+
+  function openZoom() {
+    if (!zoomOverlay || !zoomViewer || !zoomImageBox) return;
+    const bg = detailMainImage.style.backgroundImage;
+    zoomImageBox.style.backgroundImage = bg;
+    zoomOverlay.style.display = "block";
+    zoomViewer.style.display = "flex";
+  }
+
+  function closeZoom() {
+    if (!zoomOverlay || !zoomViewer) return;
+    zoomOverlay.style.display = "none";
+    zoomViewer.style.display = "none";
+  }
+
+  if (detailMainImage) {
+    detailMainImage.addEventListener("click", openZoom);
+    detailMainImage.addEventListener("dblclick", openZoom);
+  }
+
+  if (zoomOverlay) zoomOverlay.addEventListener("click", closeZoom);
+  if (zoomViewer) zoomViewer.addEventListener("click", closeZoom);
+});
+</script>
+
+<div id="zoomOverlay" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  z-index:200;
+"></div>
+
+<div id="zoomViewer" style="
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:210;
+  padding:30px;
+">
+  <div id="zoomImageBox" style="
+    width:min(90vw,1000px);
+    height:min(90vh,800px);
+    background:#fff;
+    border-radius:20px;
+    background-size:contain;
+    background-position:center;
+    background-repeat:no-repeat;
+  "></div>
+</div>
+
+</body>
+</html>
